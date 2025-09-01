@@ -1,28 +1,43 @@
 import React from "react";
+import Card from "./Card.jsx";
+import Digit from "./Digit.jsx";
+import "../../styles/index.css";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+export default class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 999995
+    };
+  }
 
-//create your first component
-const Home = () => {
-	return (
-		<div className="text-center">
-            
+  componentDidMount() {
+    this.intervalId = setInterval(() => {
+      this.setState(prevState => {
+        if (prevState.count >= 999999) {
+          return { count: 0 }; // reiniciaaaamoooossssss
+        }
+        return { count: prevState.count + 1 };
+      });
+    }, 1000);
+  }
 
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
-		</div>
-	);
-};
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
+  }
 
-export default Home;
+  render() {
+    const digits = String(this.state.count).padStart(6, "0").split("");
+
+    return (
+      <Card title="Si llego al tope exploto!">
+        <div className="digit-strip">
+          <Digit isIcon />
+          {digits.map((d, i) => (
+            <Digit key={i} value={d} />
+          ))}
+        </div>
+      </Card>
+    );
+  }
+}
